@@ -17,7 +17,7 @@ BLUE = (0, 0, 255)
 # set up assets folder
 
 game_folder = os.path.dirname(__file__) #__file__ tracks current file on drive
-img_folder = os.path.join(game_folder, "IMG") #will join IMG to path knows / or \ in different systems
+img_folder = os.path.join(game_folder, "img") #will join IMG to path knows / or \ in different systems
 
 
 
@@ -25,16 +25,25 @@ img_folder = os.path.join(game_folder, "IMG") #will join IMG to path knows / or 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        """self.image = pygame.Surface((50, 50)) 
-        self.image.fill(GREEN)""" #green square
+        #"""self.image = pygame.Surface((50, 50)) 
+        #self.image.fill(GREEN)""" #green square
 
-        self.image = pygame.image.load(img_folder, "p1_jump.png").convert() 
+        self.image = pygame.image.load(os.path.join(img_folder, "p1_jump.png")).convert() 
         #convert helps pygame operate easly on drawing (it is faster)
+        self.image.set_colorkey(BLACK) #creates image opacity
         self.rect = self.image.get_rect()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
+        self.y_speed = 5
 
     def update(self):
         self.rect.x += 5
+        self.rect.y += self.y_speed
+
+        if self.rect.bottom > HEIGHT - 200:
+            self.y_speed = -5
+        if self.rect.top <200:
+            self.y_speed = 5
+
         if self.rect.left > WIDTH:
             self.rect.right = 0
             
@@ -65,7 +74,7 @@ while running:
     all_sprites.update()
 
     # Draw / render
-    screen.fill(BLACK)
+    screen.fill(GREEN)
     all_sprites.draw(screen)
     # *after* drawing everything, flip the display
     pygame.display.flip()
